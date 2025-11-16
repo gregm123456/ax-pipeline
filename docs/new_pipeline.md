@@ -1,5 +1,5 @@
-# 简化版pipeline的讲解
-主要是想简化pipeline的创建
+# Simplified pipeline guide
+This doc shows how to simplify pipeline creation using the new API.
 
 原先带的三个pipeline，现在都用新的api创建了一次，降低心智负担的同时，提高效率。
 - [sample_vin_ivps_joint_vo](../examples/sample_vin_ivps_joint_vo) -> [sample_vin_ivps_joint_vo_new](../examples/sample_vin_ivps_joint_vo_new)
@@ -7,7 +7,7 @@
 - [sample_vin_ivps_joint_venc_rtsp_vo](../examples/sample_vin_ivps_joint_venc_rtsp_vo) -> [sample_vin_ivps_joint_venc_rtsp_vo_new](../examples/sample_vin_ivps_joint_venc_rtsp_vo_new)
 
 
-例如，我们想创建一路，从相机拿到数据，rtsp 输出的 pipeline
+Example: Create a pipeline that reads from camera and outputs an RTSP stream
 ```c++
 pipeline_t pipe_rtsp;
 {
@@ -16,7 +16,7 @@ pipeline_t pipe_rtsp;
     config.n_ivps_fps = 25;
     config.n_ivps_width = 1920;
     config.n_ivps_height = 1080;
-    config.n_osd_rgn = 4; // osd rgn 的个数（最多五个），一个rgn可以osd 32个目标，现在用的是自定义的rgba画布，所以指挥占用一个rgn里的一个目标，所以这里只创建一个
+    config.n_osd_rgn = 4; // Number of OSD regions (max 5). Each region can display up to 32 objects. When using a custom RGBA canvas, one object may occupy a slot in a region, so here we only create one.
 }
 pipe_rtsp.enable = 1;
 pipe_rtsp.pipeid = 0x90015;
@@ -30,7 +30,7 @@ pipe_rtsp.m_venc_attr.n_venc_chn = 0;                  // 重复的会创建失�
 create_pipeline(&pipe_rtsp);
 ```
 
-例如，我们想创建一路，从相机拿到对应分辨率的数据，并对数据进行letterbox填充缩放，使用ai检测pipeline
+Example: Create a pipeline that reads from camera, resizes with letterbox padding to the desired resolution, and runs AI inference
 ```c++
 void ai_inference_func(pipeline_buffer_t *buff)
 {
@@ -52,12 +52,12 @@ void ai_inference_func(pipeline_buffer_t *buff)
 pipeline_t pipe_ai;
 {
     pipeline_ivps_config_t &config = pipe_ai.m_ivps_attr;
-    config.n_ivps_grp = 1; // 重复的会创建失败
+    config.n_ivps_grp = 1; // Duplicate groups will fail to create
     config.n_ivps_fps = 60;
     config.n_ivps_width = 640;
     config.n_ivps_height = 640;
-    config.b_letterbox = 1;   //填充缩放
-    config.n_fifo_count = 1;  // 如果想要拿到数据并输出到回调 就设为1~4
+    config.b_letterbox = 1;   // Enable letterbox padding and scaling
+    config.n_fifo_count = 1;  // If you want to receive frame callbacks, set this to 1~4
 }
 pipe_ai.enable = 1;
 pipe_ai.pipeid = 0x90016;
@@ -78,31 +78,32 @@ default:
 pipe_ai.n_loog_exit = 0;
 pipe_ai.n_vin_pipe = 0;
 pipe_ai.n_vin_chn = 0;
-pipe_ai.output_func = ai_inference_func; // 图像输出的回调函数
+    pipe_ai.output_func = ai_inference_func; // Callback function to handle image output
 create_pipeline(&pipe_ai);
 ```
 
-例如，我们想创建一路，从相机拿到数据，输出到爱芯派屏幕的 pipeline
+Example: Create a pipeline that reads from camera and outputs to the AiXinPai screen
 ```c++
  pipeline_t pipe_vo;
 {
     pipeline_ivps_config_t &config = pipe_vo.m_ivps_attr;
     config.n_ivps_grp = 0;    // 重复的会创建失败
-    config.n_ivps_fps = 60;   // 屏幕只能是60gps
+    config.n_ivps_fps = 60;   // Screen output is limited to 60 fps
     config.n_ivps_rotate = 1; // 旋转
     config.n_ivps_width = 854;
     config.n_ivps_height = 480;
-    config.n_osd_rgn = 4; // osd rgn 的个数，一个rgn可以osd 32个目标
+    config.n_osd_rgn = 4; // Number of OSD regions, each region can display up to 32 objects
 }
 pipe_vo.enable = 1;
 pipe_vo.pipeid = 0x90015;
 pipe_vo.m_input_type = pi_vin;
 pipe_vo.m_output_type = po_vo_sipeed_maix3_screen;
-pipe_vo.n_loog_exit = 0; // 可以用来控制线程退出（如果有的话）
+    pipe_vo.n_loog_exit = 0; // Can be used to control thread exit (if any)
 pipe_vo.n_vin_pipe = 0;
 pipe_vo.n_vin_chn = 0;
 create_pipeline(&pipe_vo);
 ```
 
-一切都变得清晰简单
-## ***pipeline_t*** 的参数解释可以直接看[头文件的解释](../examples/common/common_pipeline/common_pipeline.h)
+Everything becomes clearer and simpler.
+## For pipeline_t structure and parameters, see the header file documentation:
+[header reference](../examples/common/common_pipeline/common_pipeline.h)

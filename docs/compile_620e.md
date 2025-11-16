@@ -1,28 +1,28 @@
-# 源码编译（AX620E）
+# Source Build (AX620E)
 
-ax-samples 的源码编译目前有两种实现路径：
+There are currently two build paths for ax-samples:
 
-- **本地编译**：由于开发板集成了完整的Linux系统，可以预装必要的 gcc、cmake 等开发环境，因此可以在开发板上直接完成源码编译；
-- **交叉编译**：在 x86 PC 的常规开发环境中，通过对应的交叉编译工具链完成对源码的编译。
+- **Local build**: Build directly on the development board if it contains a full Linux environment with gcc, cmake, and other necessary dev tools.
+- **Cross-build**: Build on an x86 PC using the aarch64 cross-toolchain and then deploy the binaries to the target device.
 
-## 1 本地编译
+## 1 Local build
 
-由于 AX630C、AX620Q 对应的产品形态决定了其不会具备完整的Linux软件开发平环境，因此暂不提供本地编译的说明。
+AX630C and AX620Q devices typically do not include a full Linux development environment, so local builds are not covered here.
 
-## 2 交叉编译
+## 2 Cross-build
 
-### 2.1 下载源码
+### 2.1 Download source
 
-git clone 下载源码，进入 ax-pipeline 根目录
+Clone the repository and enter the `ax-pipeline` root directory:
 
 ```shell
 git clone https://github.com/AXERA-TECH/ax-pipeline.git
 cd ax-pipeline
 ```
 
-### 2.2 准备子模块
+### 2.2 Prepare submodules
 
-请联系 FAE 获取 AX620E BSP 开发包，将 SDK 包解压到 ax-pipeline 目录并命名为 `ax620e_bsp_sdk`
+Please contact FAE to obtain the AX620E BSP package. Extract the SDK to the `ax-pipeline` directory and name it `ax620e_bsp_sdk`.
 
 ```shell
 git submodule update --init
@@ -33,7 +33,7 @@ unzip drm.zip -d third-party
 cd ..
 ```
 
-### 2.3 创建 3rdparty，下载opencv
+### 2.3 Create 3rdparty and download OpenCV
 
 ```shell
 mkdir 3rdparty
@@ -43,10 +43,10 @@ unzip libopencv-4.5.5-aarch64.zip
 cd ..
 ```
 
-### 2.4 编译环境
+### 2.4 Build environment
 
-- cmake 版本大于等于 3.13
-- 已配置交叉编译工具链，若未配置请参考以下操作
+- cmake >= 3.13
+- Make sure your cross-toolchain is configured. If not, use the following example:
 
 ```shell
 wget https://developer.arm.com/-/media/Files/downloads/gnu-a/9.2-2019.12/binrel/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu.tar.xz
@@ -54,7 +54,7 @@ tar -xvf gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu.tar.xz
 export PATH=$PATH:$PWD/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/bin/
 ```
 
-### 2.5 源码编译
+### 2.5 Build source
 
 ```shell
 cd ..
@@ -65,7 +65,7 @@ make $(expr `nproc` - 1)
 make install
 ```
 
-编译完成后，生成的可执行示例存放在 `ax-pipeline/build/install/bin/` 路径下：
+After the build completes, the generated binaries are in `ax-pipeline/build/install/bin/`:
 
 ```shell
 ax-pipeline/build$ tree install

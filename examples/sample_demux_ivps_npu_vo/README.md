@@ -1,16 +1,16 @@
-## 简介
-  通过 RTSP/MP4 输入，实现算力盒子。
+## Overview
+  This example shows how to build a pipeline that accepts RTSP/MP4 input and splits two decoded streams for display and inference.
 
-## 流程图
+## Flowchart
 ![](../../docs/sample_demux_ivps_joint_vo.png)
 
-## 快速体验
+## Quick start
 ```bash
 Usage:./sample_demux_ivps_joint_vo -h for help
 
         -p: model config file path
         -f: mp4 file(just only support h264 format)
-        -l: loop play video(循环播放)
+        -l: loop play video (loop playback)
 ```
 
 ```

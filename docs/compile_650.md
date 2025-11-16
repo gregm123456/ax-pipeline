@@ -1,37 +1,37 @@
-# 源码编译（AX650N）
+# Source build (AX650N)
 
-**注意：由于不可抗拒的原因，请务必保证 ax-pipeline、ax650n_bsp_sdk、board_bsp 三者版本一致（例如，当前 爱芯派Pro 的 BSP 版本为 3.6.2），否则将出现各种意想不到的异常问题:（**
+**Note**: Please ensure that `ax-pipeline`, `ax650n_bsp_sdk`, and `board_bsp` versions match (for example, the AiXinPai Pro BSP version is 3.6.2). Mismatched versions may cause unexpected errors.
 
-ax-samples 的源码编译目前有两种实现路径：
+There are two main build paths for ax-samples:
 
-- **本地编译**：由于开发板集成了完整的Linux系统，可以预装必要的 gcc、cmake 等开发环境，因此可以在开发板上直接完成源码编译；
-- **交叉编译**：在 x86 PC 的常规开发环境中，通过对应的交叉编译工具链完成对源码的编译。
+- **Local build**: Build on the development board if it contains a full Linux environment with gcc, cmake, etc.
+- **Cross-build**: Build on an x86 PC using the appropriate cross-toolchain for aarch64.
 
 ## 1 本地编译(WIP)
 
-### 1.1 已支持硬件板卡
+### 1.1 Supported hardware boards
 
-- 爱芯派Pro（基于 AX650N）
+- AiXinPai Pro (based on AX650N)
 
-### 1.2 环境搭建
+### 1.2 Environment setup
 
-在开发板上安装必要的软件开发环境
+Install the required developer tools on the development board:
 
 ```bash
 apt update
 apt install build-essential libopencv-dev cmake
 ```
 
-### 1.3 下载源码
+### 1.3 Download source
 
-git clone 下载源码，进入 ax-pipeline 根目录
+Clone the repository and enter the `ax-pipeline` root directory:
 
 ```shell
 git clone https://github.com/AXERA-TECH/ax-pipeline.git
 cd ax-pipeline
 ```
 
-### 1.4 准备子模块
+### 1.4 Prepare submodules
 
 ```shell
 git submodule update --init
@@ -40,7 +40,7 @@ tar xzvf ax650n_bsp_sdk.tar.gz && rm ax650n_bsp_sdk.tar.gz
 ln -s /soc/lib/ ax650n_bsp_sdk/msp/out/lib
 ```
 
-### 1.5 源码编译
+### 1.5 Build source
 
 ```shell
 mkdir build && cd build
@@ -49,7 +49,7 @@ make -j$(expr `nproc` - 2)
 make install
 ```
 
-编译完成后，生成的可执行示例存放在 `ax-pipeline/build/install/bin/` 路径下：
+After the build completes, the generated binaries are in `ax-pipeline/build/install/bin/`:
 
 ```shell
 ax-pipeline/build$ tree install
@@ -87,18 +87,18 @@ install
 |   `-- sample_multi_demux_ivps_npu_multi_rtsp_hdmi_vo
 ```
 
-## 2 交叉编译
+## 2 Cross-build
 
-### 2.1 下载源码
+### 2.1 Download source
 
-git clone 下载源码，进入 ax-pipeline 根目录
+Clone the repository and enter the `ax-pipeline` root directory:
 
 ```shell
 git clone https://github.com/AXERA-TECH/ax-pipeline.git
 cd ax-pipeline
 ```
 
-### 2.2 准备子模块
+### 2.2 Prepare submodules
 
 ```shell
 git submodule update --init
@@ -116,7 +116,7 @@ tar xzvf libexif.tar.gz && rm libexif.tar.gz
 cd ../
 ```
 
-### 2.3 创建 3rdparty，下载opencv
+### 2.3 Create `3rdparty` and download OpenCV
 
 ```shell
 mkdir 3rdparty && cd 3rdparty
@@ -125,10 +125,10 @@ tar xzvf opencv_4.5.5.tar.gz && rm opencv_4.5.5.tar.gz
 cd ../
 ```
 
-### 2.4 编译环境
+### 2.4 Build environment
 
-- cmake 版本大于等于 3.13
-- 已配置交叉编译工具链，若未配置请参考以下操作
+- cmake >= 3.13
+- Make sure you have the cross-toolchain configured; example command shown below
 
 ```shell
 wget https://developer.arm.com/-/media/Files/downloads/gnu-a/9.2-2019.12/binrel/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu.tar.xz
@@ -136,7 +136,7 @@ tar -xvf gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu.tar.xz
 export PATH=$PATH:$PWD/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/bin/
 ```
 
-### 2.5 源码编译
+### 2.5 Build source
 
 ```shell
 mkdir build && cd build
@@ -145,7 +145,7 @@ make -j$(expr `nproc` - 2)
 make install
 ```
 
-编译完成后，生成的可执行示例存放在 `ax-pipeline/build/install/bin/` 路径下：
+After the build completes, the generated binaries are in `ax-pipeline/build/install/bin/`:
 
 ```shell
 ax-pipeline/build$ tree install

@@ -1,18 +1,18 @@
-## 简介
-  通过 RTSP/MP4 输入，实现算力盒子。
+## Overview
+  This example shows how to build a media pipeline that accepts RTSP/MP4 input and performs decoding, inference, and RTSP output.
 
-## 流程图
+## Flowchart
 ![](../../docs/sample_demux_ivps_joint_rtsp.png)
 
-## 环境准备
-rtsp服务及推拉流配置请参考   [rtsp-simple-server](../../docs/rtsp.md)
+## Environment setup
+For RTSP server and streaming configuration see: [rtsp-simple-server](../../docs/rtsp.md)
 
-## 快速体验
-1、运行以下命令，进行 mp4/h264 文件的解包、解码、推理，并通过rtsp推流输出结果。
+## Quick start
+1) Run the following command to demux, decode, and infer on an mp4/h264 file and output results via RTSP stream.
 ```
 ./sample_demux_ivps_npu_rtsp -f test.mp4 -l 1 -p config/yolov5s.json -r 25
 ```
-2、运行以下命令，进行 rtsp 的取流、解码、推理，并通过rtsp推流输出结果。
+2) Run the following command to pull, decode, and infer from an RTSP input and output results via RTSP stream.
 ```
 ./sample_demux_ivps_npu_rtsp -f rtsp://192.168.31.1:8554/test -l 1 -p config/yolov5s.json -r 25
 ```
